@@ -67,8 +67,45 @@
 const express = require("express");
 const app = express();
 const db =require('./db')
+
+const Person = require("./models/Person");
+const bodyParser = require("body-parser");
+app.use(bodyParser.json()); 
+
 app.get('/', function(req, res) {
-  res.send("hello world")
+  res.send("Welcome to my hotel....");
+})
+
+//POST route to add a person
+app.post('/person', async (req,res)=>{
+  try{
+    const data = req.body
+    const newPerson = new Person(data)
+    // save the new person to the database
+    const response = await newPerson.save()
+    res.status(201).json(response)
+  }catch(err){
+    console.log(err)
+    res.status(500).json({error: 'Internal server error'});
+  }
+
+
+  // const data = req.body; // assuming the request body contains the person data
+
+  // // create a new Person document using the mongoose model
+  // const newPerson = new Person(data);
+
+  // // save the new person to the database
+  // newPerson.save((error, savedPerson) => {
+  //   if(error) {
+  //     console.log("Error saving person", error);
+  //     res.status(500).json({error:'Internal server error'})
+  //   }else{
+  //     console.log('data saved successfully')
+  //       res.status(200).json(savedPerson);
+      
+  //   }
+ // })
 })
 
 
